@@ -3,3 +3,8 @@ C:\Users\bm\Repos\_teams\teams\obj\Debug\teams2dokuwiki.csproj.SuggestedBindingR
 C:\Users\bm\Repos\_teams\teams\obj\Debug\teams2dokuwiki.csproj.CoreCompileInputs.cache
 C:\Users\bm\Repos\_teams\teams\obj\Debug\teams.exe
 C:\Users\bm\Repos\_teams\teams\obj\Debug\teams.pdb
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams2dokuwiki.csproj.AssemblyReference.cache
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams2dokuwiki.csproj.SuggestedBindingRedirects.cache
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams2dokuwiki.csproj.CoreCompileInputs.cache
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams.exe
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams.pdb

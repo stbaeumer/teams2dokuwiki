@@ -576,7 +576,7 @@ teamSoll.DisplayName.Contains("lassenleitung"))
         {
             foreach (var team in teams)
             {
-                Hinzufügen(team);
+                Add(team);
             }
         }
 

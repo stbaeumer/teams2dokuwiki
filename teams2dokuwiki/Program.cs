@@ -37,7 +37,7 @@ namespace teams2dokuwiki
 
                 Global.TeamsSoll.Hinzufügen(new Teams(klassenMitAllenSoll, "Klassenteams-LuL", lehrers, anrechnungen));
                 Global.TeamsSoll.Hinzufügen(new Teams(klassenMitAllenSoll, "Bildungsgaenge-LuL", lehrers, anrechnungen));
-                Global.TeamsSoll.Hinzufügen(new Team("Kollegium", lehrers, lehrers.Kollegium()));
+                Global.TeamsSoll.Add(new Team("Kollegium", lehrers, lehrers.Kollegium()));
                 Global.TeamsSoll.Hinzufügen(new Team("Berufliches Gymnasium", lehrers, unterrichts.Abitur(lehrers)));
                 Global.TeamsSoll.Hinzufügen(new Team("FHR", lehrers, unterrichts.Fhr(lehrers)));
                 Global.TeamsSoll.Hinzufügen(new Team("SV"));
