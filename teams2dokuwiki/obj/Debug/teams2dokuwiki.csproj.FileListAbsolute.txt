@@ -1,0 +1,5 @@
+C:\Users\bm\Repos\_teams\teams\obj\Debug\teams2dokuwiki.csproj.AssemblyReference.cache
+C:\Users\bm\Repos\_teams\teams\obj\Debug\teams2dokuwiki.csproj.SuggestedBindingRedirects.cache
+C:\Users\bm\Repos\_teams\teams\obj\Debug\teams2dokuwiki.csproj.CoreCompileInputs.cache
+C:\Users\bm\Repos\_teams\teams\obj\Debug\teams.exe
+C:\Users\bm\Repos\_teams\teams\obj\Debug\teams.pdb
