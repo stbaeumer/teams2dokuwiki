@@ -8,3 +8,6 @@ C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams2dokuwiki.csproj.
 C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams2dokuwiki.csproj.CoreCompileInputs.cache
 C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams.exe
 C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\obj\Debug\teams.pdb
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\bin\Debug\teams.exe.config
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\bin\Debug\teams.exe
+C:\Users\bm\Repos\teams2dokuwiki\teams2dokuwiki\bin\Debug\teams.pdb

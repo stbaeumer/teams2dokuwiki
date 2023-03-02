@@ -179,6 +179,9 @@ teamSoll.DisplayName.StartsWith("HB")))
                 }
             }
 
+            File.AppendAllText(dateiPraktikum, "" + Environment.NewLine);
+            File.AppendAllText(dateiPraktikum, "Seite erstellt mit [[github>stbaeumer/teams2dokuwiki|teams2dokuwiki]]." + Environment.NewLine);
+
             File.AppendAllText(dateiPraktikum, schuelerName + Environment.NewLine);
             Process.Start("notepad++.exe", dateiPraktikum);
         }
@@ -404,23 +407,23 @@ teamSoll.DisplayName.StartsWith("HB")))
 
                 if (!(from t in this where t.DisplayName == team.DisplayName select t).Any())
                 {
-                    Hinzufügen(team);
+                    Add(team);
                 }
             }
         }
 
         internal void DateiGruppenUndMitgliederErzeugen()
         {
-            string dateiDokuwiki = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\Gruppen-und-Mitglieder.txt";
+            string dateiGruppenUndMitglieder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\Gruppen-und-Mitglieder.txt";
 
-            if (File.Exists(dateiDokuwiki))
+            if (File.Exists(dateiGruppenUndMitglieder))
             {
-                File.Delete(dateiDokuwiki);
+                File.Delete(dateiGruppenUndMitglieder);
             }
 
-            File.WriteAllText(dateiDokuwiki, "====== Gruppen & Mitglieder ======" + Environment.NewLine);
-            File.AppendAllText(dateiDokuwiki, "  Stand: " + DateTime.Now.ToShortDateString() + ", " + DateTime.Now.ToShortTimeString() + " Uhr; Bitte diese Seite nicht manuell ändern." + Environment.NewLine);
-            File.AppendAllText(dateiDokuwiki, "Siehe auch [[:kollegium|Kollegium]]." + Environment.NewLine);
+            File.WriteAllText(dateiGruppenUndMitglieder, "====== Gruppen & Mitglieder ======" + Environment.NewLine);
+            File.AppendAllText(dateiGruppenUndMitglieder, "  Stand: " + DateTime.Now.ToShortDateString() + ", " + DateTime.Now.ToShortTimeString() + " Uhr; Bitte diese Seite nicht manuell ändern." + Environment.NewLine);
+            File.AppendAllText(dateiGruppenUndMitglieder, "Siehe auch [[:kollegium|Kollegium]]." + Environment.NewLine);
 
             foreach (var teamSoll in (from t in Global.TeamsSoll where t.Beschreibung == null select t).ToList().OrderBy(s => s.DisplayName))
             {
@@ -559,17 +562,21 @@ teamSoll.DisplayName.Contains("lassenleitung"))
                     name = teamSoll.BildungsgangLanganme;
                 }
 
-                File.AppendAllText(dateiDokuwiki, "===== " + name + " =====" + Environment.NewLine);
+                File.AppendAllText(dateiGruppenUndMitglieder, "===== " + name + " =====" + Environment.NewLine);
 
-                File.AppendAllText(dateiDokuwiki, "Zur Wiki-Seite: [[" + namensraum + "|" + name + "]]" + Environment.NewLine);
+                File.AppendAllText(dateiGruppenUndMitglieder, "Zur Wiki-Seite: [[" + namensraum + "|" + name + "]]" + Environment.NewLine);
 
                 if (teamSoll.Vorsitz != null)
                 {
-                    File.AppendAllText(dateiDokuwiki, teamSoll.Vorsitz + Environment.NewLine);
+                    File.AppendAllText(dateiGruppenUndMitglieder, teamSoll.Vorsitz + Environment.NewLine);
                 }
-                File.AppendAllText(dateiDokuwiki, "| " + mitgliederNachname + "|" + mitgliederMail + " |" + Environment.NewLine);
+                File.AppendAllText(dateiGruppenUndMitglieder, "| " + mitgliederNachname + "|" + mitgliederMail + " |" + Environment.NewLine);
             }
-            Process.Start("notepad++.exe", dateiDokuwiki);
+            
+            File.AppendAllText(dateiGruppenUndMitglieder, "" + Environment.NewLine);
+            File.AppendAllText(dateiGruppenUndMitglieder, "Seite erstellt mit [[github>stbaeumer/teams2dokuwiki|teams2dokuwiki]]." + Environment.NewLine);
+            
+            Process.Start("notepad++.exe", dateiGruppenUndMitglieder);
         }
 
         internal void Hinzufügen(Teams teams)

@@ -152,54 +152,15 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                 foreach (var anrechnung in lehrer.Anrechnungen)
                 {
                     if (anrechnung.Grund == 500 && anrechnung.Wert > 0)
-                    {
-                        string namensraum = ":" + anrechnung.Text;
-                        string name = anrechnung.Text;
+                    {                        
+                        var text = anrechnung.TextGekürzt;
 
-                        if (anrechnung.Beschr.Contains("Bildungsg"))
+                        if (anrechnung.Beschr != "")
                         {
-                            var xxx = (from k in klasses where anrechnung.Text.Contains(k.BildungsgangLangname) select k.Stufe).FirstOrDefault();
-
-                            namensraum = "";
-                            if (xxx.StartsWith("BS"))
-                            {
-                                namensraum = "bildungsgaenge:berufsschule";
-                            }
-                            if (xxx.StartsWith("AV") || xxx.StartsWith("IFK"))
-                            {
-                                namensraum = "bildungsgaenge:ausbildungsvorbereitung";
-                            }
-                            if (xxx.StartsWith("FOS"))
-                            {
-                                namensraum = "bildungsgaenge:fachoberschule";
-                            }
-                            if (xxx.StartsWith("GY"))
-                            {
-                                namensraum = "bildungsgaenge:berufliches_gymnasium";
-                            }
-                            if (xxx.StartsWith("BAB") || xxx.StartsWith("BK/HSA") || xxx.StartsWith("BFS"))
-                            {
-                                namensraum = "bildungsgaenge:berufsfachschule";
-                            }
+                            text = "[[:" + anrechnung.Beschr + "|" + anrechnung.TextGekürzt + "]]";
                         }
-                        else
-                        {
-                            name = anrechnung.Text;
-                            namensraum = ":" + anrechnung.Text;//.Replace(" ", "-");
-
-                            if (name.Contains("("))
-                            {
-                                int index = name.IndexOf("(");
-                                name = (name.Substring(0, index)).TrimEnd();
-                            }
-                            if (namensraum.Contains("("))
-                            {
-                                int index = namensraum.IndexOf("(");
-                                namensraum = (namensraum.Substring(0, index)).TrimEnd();
-                            }
-                        }
-
-                        anrechnungstring += "|[[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + "|" + lehrer.Nachname + ", " + lehrer.Vorname + "]]|[[" + namensraum + "|" + name + "]]|  " + anrechnung.Wert + "|" + (anrechnung.Von.Year == 1 ? "" : anrechnung.Von.ToShortDateString()) + " |" + (anrechnung.Bis.Year == 1 ? "" : anrechnung.Bis.ToShortDateString()) + " |" + Environment.NewLine;
+                                               
+                        anrechnungstring += "|[[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + "|" + lehrer.Nachname + ", " + lehrer.Vorname + "]]|" + text + "|  " + anrechnung.Wert + "|" + (anrechnung.Von.Year == 1 ? "" : anrechnung.Von.ToShortDateString()) + " |" + (anrechnung.Bis.Year == 1 ? "" : anrechnung.Bis.ToShortDateString()) + " |" + Environment.NewLine;
                         summe += anrechnung.Wert;
                     }
                 }
@@ -207,10 +168,14 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
             anrechnungstring += "| |  Summe:|  " + summe.ToString() + "| | |";
 
             File.AppendAllText(dateiAnrechnungen, anrechnungstring + Environment.NewLine);
+
+            File.AppendAllText(dateiAnrechnungen, "" + Environment.NewLine);
+            File.AppendAllText(dateiAnrechnungen, "Seite erstellt mit [[github>stbaeumer/teams2dokuwiki|teams2dokuwiki]]." + Environment.NewLine);
+
             Process.Start("notepad++.exe", dateiAnrechnungen);
         }
 
-        internal void KollegiumDateiErzeugen(Unterrichts unterrichts, Klasses klasses)
+        internal void DateiKollegiumErzeugen(Unterrichts unterrichts, Klasses klasses)
         {
             string dateiKollegium = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\Kollegium.txt";
 
@@ -218,6 +183,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
             {
                 File.Delete(dateiKollegium);
             }
+
             File.WriteAllText(dateiKollegium, "====== Kollegium ======" + Environment.NewLine);
             File.AppendAllText(dateiKollegium, Environment.NewLine);
             File.AppendAllText(dateiKollegium, "  Stand: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + Environment.NewLine);
@@ -372,6 +338,9 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
                 File.AppendAllText(dateiKollegium, "|{{:lul:lul-fotos:" + lehrer.Kürzel + ".jpg?nolink&100|}}| **" + (lehrer.Titel != "" ? lehrer.Titel + " " : "") + lehrer.Nachname + ", " + lehrer.Vorname + @"** (" + lehrer.Kürzel + @")\\ [[" + lehrer.Mail + @"]]\\ [[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + " | " + lehrer.Vorname + " " + lehrer.Nachname + @"]]|" + bildungsgaenge + faecher + klassenleitungen + aufgaben + "| " + Environment.NewLine);
             }
+                        
+            File.AppendAllText(dateiKollegium, "" + Environment.NewLine);
+            File.AppendAllText(dateiKollegium, "Seite erstellt mit [[github>stbaeumer/teams2dokuwiki|teams2dokuwiki]]." + Environment.NewLine);
 
             File.AppendAllText(dateiKollegium, "{{tag>Zuständigkeiten Personal Klassenleitung}}" + Environment.NewLine);
 
