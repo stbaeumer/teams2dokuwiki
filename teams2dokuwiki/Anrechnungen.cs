@@ -113,8 +113,13 @@ ORDER BY CountValue.TEACHER_ID;
                     while (sqlDataReader.Read())
                     {
 
-                        var sss = sqlDataReader.GetInt32(6);
+                        var sss = sqlDataReader.GetInt32(1);
+                        if (sss== 309)
+                        {
+                            string a = "";
+                        }
 
+                        
 
                         Anrechnung anrechnung = new Anrechnung()
                         {
@@ -135,15 +140,17 @@ ORDER BY CountValue.TEACHER_ID;
                         {
                             anrechnung.TextGekürzt = anrechnung.Text.Trim();
                         }
-                        
-                        if (anrechnung.TeacherIdUntis != 0 && !(from t in this                              
-                             where t.TeacherIdUntis == anrechnung.TeacherIdUntis                              
-                             where t.Text == anrechnung.Text                             where t.Beschr == anrechnung.Beschr
-                             select t).Any())
+
+                        if ((Global.SafeGetString(sqlDataReader, 2)).Contains("CNC"))
+                        {
+                            string a = ";;";
+                        }
+
+                        if (anrechnung.TeacherIdUntis != 0 )
                         {                            
                             if (!(anrechnung.Text.Contains("euergruppe") && anrechnung.Beschr.Contains("ildungsgangl")))
                             {
-                                if (anrechnung.Grund > 210 || anrechnung.Grund == 200) // Schwerbehinderung etc. nicht einlesen
+                                if (anrechnung.Grund > 210 || anrechnung.Grund == 200 || anrechnung.Beschr == "Interessen") // Schwerbehinderung etc. nicht einlesen
                                 {   
                                     this.Add(anrechnung);
                                 }                                
@@ -159,6 +166,7 @@ ORDER BY CountValue.TEACHER_ID;
                 finally
                 {
                     odbcConnection.Close();
+                    Global.WriteLine("Anrechnungen", this.Count);
                 }
             }
         }

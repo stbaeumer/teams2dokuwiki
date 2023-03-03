@@ -53,7 +53,7 @@ namespace teams2dokuwiki
                 //Global.TeamsSoll.Hinzufügen(new Team("KlassenleitungenBlaueBriefe", lehrers, klasses.KlassenleitungenBlaueBriefe(aktJahr)));
 
                 lehrers.DateiKollegiumErzeugen(unterrichts, klasses);
-                Global.TeamsSoll.DateiGruppenUndMitgliederErzeugen();
+                //Global.TeamsSoll.DateiGruppenUndMitgliederErzeugen();
                 Global.TeamsSoll.DateiPraktiumErzeugen();
                 lehrers.DateiAnrechnungenErzeugen(klasses);
             }

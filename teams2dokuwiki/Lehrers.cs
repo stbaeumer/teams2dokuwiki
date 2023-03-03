@@ -49,6 +49,11 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                         lehrer.IdUntis = sqlDataReader.GetInt32(0);
                         lehrer.Kürzel = Global.SafeGetString(sqlDataReader, 1);
                         lehrer.Nachname = Global.SafeGetString(sqlDataReader, 2);
+
+                        if (lehrer.Nachname == "Moritz")
+                        {
+                            string aa = "";
+                        }
                         if (lehrer.Nachname != "")
                         {
                             try
@@ -66,7 +71,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                                 }
                                 catch (Exception)
                                 {
-                                    throw new Exception("Kein Geburtsdatum");
+                                    Console.WriteLine(lehrer.Kürzel + ": Kein Geburtsdatum");
                                 }
 
                                 lehrer.AlterAmErstenSchultagDiesesJahres = lehrer.GetAlterAmErstenSchultagDiesesJahres(aktSj);
@@ -149,6 +154,10 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
             foreach (var lehrer in this.OrderBy(x => x.Nachname))
             {
+                if (lehrer.Nachname == "Moritz")
+                {
+                    string a = "";
+                }
                 foreach (var anrechnung in lehrer.Anrechnungen)
                 {
                     if (anrechnung.Grund == 500 && anrechnung.Wert > 0)
@@ -173,6 +182,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
             File.AppendAllText(dateiAnrechnungen, "Seite erstellt mit [[github>stbaeumer/teams2dokuwiki|teams2dokuwiki]]." + Environment.NewLine);
 
             Process.Start("notepad++.exe", dateiAnrechnungen);
+            Global.WriteLine("DateiAnrechnungen.txt erzeugt", "ok");
         }
 
         internal void DateiKollegiumErzeugen(Unterrichts unterrichts, Klasses klasses)
@@ -191,14 +201,18 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
             File.AppendAllText(dateiKollegium, "Siehe auch [[kollegium:gruppen|Gruppen & Mitglieder]]." + Environment.NewLine);
 
             File.AppendAllText(dateiKollegium, Environment.NewLine);
-            File.AppendAllText(dateiKollegium, "^  Foto  ^  Name  ^ ^" + Environment.NewLine);
+            //File.AppendAllText(dateiKollegium, "^  Foto  ^  Name  ^ ^" + Environment.NewLine);
 
             foreach (var lehrer in this.OrderBy(x => x.Nachname))
             {
+                //File.AppendAllText(dateiKollegium,"==== " + lehrer.Kürzel + " ====" + Environment.NewLine);
+                //File.AppendAllText(dateiKollegium, "" + Environment.NewLine);
+
                 string aufgaben = "";
                 string klassenleitungen = "";
                 string faecher = "";
                 string bildungsgaenge = "";
+                var interessen = "";
 
                 // Auf Fächer prüfen
 
@@ -300,7 +314,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                 {
                     aufgaben += @"**Funktion / Aufgabenbereich:** ";
 
-                    foreach (var anrechnung in lehrer.Anrechnungen.OrderBy(x => x.Text))
+                    foreach (var anrechnung in (from l in lehrer.Anrechnungen where l.Beschr != "Interessen" select l).OrderBy(x => x.Text))
                     {
                         string wert = "";
 
@@ -333,10 +347,28 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
                     aufgaben = aufgaben.TrimEnd();
                     aufgaben = aufgaben.TrimEnd(',');
+                    aufgaben = aufgaben + @"\\ ";
+                }
+
+                // Auf Interessen prüfen
+                
+                if ((from l in lehrer.Anrechnungen where l.Beschr == "Interessen" select l).Any())
+                {
+                    interessen += @"**Interessen:** ";
+
+                    foreach (var anrechnung in (from l in lehrer.Anrechnungen where l.Beschr == "Interessen" select l).OrderBy(x => x.Text))
+                    {   
+                        var text = anrechnung.TextGekürzt;
+
+                        interessen += " " + text + @",";
+                    }
+
+                    interessen = interessen.TrimEnd();
+                    interessen = interessen.TrimEnd(',');
 
                 }
 
-                File.AppendAllText(dateiKollegium, "|{{:lul:lul-fotos:" + lehrer.Kürzel + ".jpg?nolink&100|}}| **" + (lehrer.Titel != "" ? lehrer.Titel + " " : "") + lehrer.Nachname + ", " + lehrer.Vorname + @"** (" + lehrer.Kürzel + @")\\ [[" + lehrer.Mail + @"]]\\ [[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + " | " + lehrer.Vorname + " " + lehrer.Nachname + @"]]|" + bildungsgaenge + faecher + klassenleitungen + aufgaben + "| " + Environment.NewLine);
+                File.AppendAllText(dateiKollegium, "|<BOOKMARK:" + lehrer.Kürzel + ">{{:lul:lul-fotos:" + lehrer.Kürzel + ".jpg?nolink&100|}}| **" + (lehrer.Titel != "" ? lehrer.Titel + " " : "") + lehrer.Nachname + ", " + lehrer.Vorname + @"** (" + lehrer.Kürzel + @")\\ [[" + lehrer.Mail + @"]]\\ [[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + " | " + lehrer.Vorname + " " + lehrer.Nachname + @"]]|" + bildungsgaenge + faecher + klassenleitungen + aufgaben + interessen + "| " + Environment.NewLine);
             }
                         
             File.AppendAllText(dateiKollegium, "" + Environment.NewLine);
@@ -345,6 +377,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
             File.AppendAllText(dateiKollegium, "{{tag>Zuständigkeiten Personal Klassenleitung}}" + Environment.NewLine);
 
             Process.Start("notepad++.exe", dateiKollegium);
+            Global.WriteLine("DateiKollegium.txt erzeugt", "ok");
         }
 
         internal List<Lehrer> Lehrerinnen()

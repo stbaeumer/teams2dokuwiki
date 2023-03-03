@@ -201,5 +201,10 @@ start notepad++ C:\users\bm\Documents\GruppenOwnerMembers.csv
             Console.WriteLine((v + " " + ".".PadRight(count / 150, '.')).PadRight(93, '.') + (" " + count).ToString().PadLeft(6), '.');
             //File.AppendAllLines(Global.TeamsPs, new List<string>() { "# Anzahl " + (v + " : ").PadRight(80,'.') + (" " + count.ToString()).PadLeft(6,'.') + "" }, Encoding.UTF8);
         }
+
+        internal static void WriteLine(string v, string go)
+        {
+            Console.WriteLine((v + " " + ".".PadRight(100 / 150, '.')).PadRight(93, '.') + go.PadLeft(6), '.');
+        }
     }
 }
