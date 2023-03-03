@@ -27,11 +27,9 @@ namespace teams2dokuwiki
         internal static void Initialize()
         {
             Global.TeamsSoll = new Teams();
-            Console.WriteLine("      teams.exe | Published under the terms of GPLv3 | Stefan Bäumer " + DateTime.Now.Year + " | Version 20230228");
-            Console.WriteLine("===================================================================================================");
-            Console.WriteLine(" *teams.exe* erstellt Wiki-Seiten, die dann per Copy&Paste nach Wiki übertragen werden können. ");            
-            Console.WriteLine("===================================================================================================");
-
+            Console.WriteLine("      teams2dokuwiki.exe | Published under the terms of GPLv3 | Stefan Bäumer " + DateTime.Now.Year + " | Version 20230228");
+            Console.WriteLine("=============================================================================================================");
+                
             Global.TeamsPs = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\Teams.ps1";
             Global.GruppenMemberCsvIst = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\GruppenOwnerMembersIst.csv";
             Global.GruppenMemberCsvSoll = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\GruppenOwnerMembersSoll.csv";
