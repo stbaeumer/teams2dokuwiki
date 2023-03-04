@@ -28,6 +28,7 @@ namespace teams2dokuwiki
                 Klasses klasses = new Klasses(periode, lehrers);
                 Schuelers schuelers = new Schuelers(klasses);
                 Fachs fachs = new Fachs();
+                Fachschaften fachschaften = new Fachschaften(fachs);
                 Unterrichtsgruppes unterrichtsgruppes = new Unterrichtsgruppes();
                 Unterrichts unterrichts = new Unterrichts(periode, klasses, lehrers, fachs, raums, unterrichtsgruppes);
                 Anrechnungs anrechnungen = new Anrechnungs(periode);
@@ -51,10 +52,11 @@ namespace teams2dokuwiki
                 //Global.TeamsSoll.Hinzufügen(new Team("Bildungsgangleitungen", lehrers, members));
                 //Global.TeamsSoll.Hinzufügen(new Team("KlassenleitungenBlaueBriefe", lehrers, klasses.KlassenleitungenBlaueBriefe(aktJahr)));
 
-                lehrers.DateiKollegiumErzeugen(unterrichts, klasses);
+                lehrers.DateiKollegiumErzeugen(unterrichts, klasses, fachschaften);
                 //Global.TeamsSoll.DateiGruppenUndMitgliederErzeugen();
                 Global.TeamsSoll.DateiPraktiumErzeugen();
                 lehrers.DateiAnrechnungenErzeugen(klasses);
+                Console.ReadKey();
             }
             catch (Exception ex)
             {

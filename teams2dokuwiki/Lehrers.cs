@@ -34,7 +34,8 @@ Teacher.ROOM_ID,
 Teacher.Title,
  Teacher.PlannedWeek,
  Teacher.Flags,
-Teacher.BirthDate
+Teacher.BirthDate,
+Teacher.Flags
  FROM Teacher
 WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_ID)=" + periode + ") AND ((Teacher.SCHOOL_ID)=177659) AND (((Teacher.Deleted)='false'))) ORDER BY Teacher.Name;";
 
@@ -50,35 +51,49 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                         lehrer.Kürzel = Global.SafeGetString(sqlDataReader, 1);
                         lehrer.Nachname = Global.SafeGetString(sqlDataReader, 2);
 
-                        if (lehrer.Nachname == "Moritz")
+                        if (lehrer.Nachname.StartsWith("Da"))
                         {
                             string aa = "";
                         }
                         if (lehrer.Nachname != "")
                         {
                             try
-                            {
-                                lehrer.Vorname = Global.SafeGetString(sqlDataReader, 3);
-                                lehrer.Mail = Global.SafeGetString(sqlDataReader, 4);
-                                lehrer.Raum = (from r in raums where r.IdUntis == sqlDataReader.GetInt32(5) select r.Raumnummer).FirstOrDefault();
-                                lehrer.Titel = Global.SafeGetString(sqlDataReader, 6);
-                                lehrer.Deputat = Convert.ToDouble(sqlDataReader.GetInt32(7)) / 1000;
-                                lehrer.Geschlecht = Global.SafeGetString(sqlDataReader, 8).Contains("W") ? "w" : "m";
+                            {                                
+                                lehrer.Flags = Global.SafeGetString(sqlDataReader, 10);
                                 lehrer.Anrechnungen = (from a in anrechnungen where a.TeacherIdUntis == sqlDataReader.GetInt32(0) select a).ToList();
-                                try
-                                {
-                                    lehrer.Geburtsdatum = DateTime.ParseExact(sqlDataReader.GetInt32(9).ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
-                                }
-                                catch (Exception)
-                                {
-                                    Console.WriteLine(lehrer.Kürzel + ": Kein Geburtsdatum");
-                                }
 
-                                lehrer.AlterAmErstenSchultagDiesesJahres = lehrer.GetAlterAmErstenSchultagDiesesJahres(aktSj);
-                                lehrer.ProzentStelle = lehrer.GetProzentStelle();
-                                lehrer.AusgeschütteteAltersermäßigung = (from a in lehrer.Anrechnungen where a.Grund == 200 select a.Wert).FirstOrDefault();
-                                lehrer.CheckAltersermäßigung();
-                                this.Add(lehrer);
+                                if (lehrer.Flags.Contains("I") && lehrer.Anrechnungen.Count == 0)
+                                {
+                                    Console.WriteLine(lehrer.Kürzel + ": Der Lehrer wird ignoriert.");
+                                }
+                                else
+                                {
+                                    lehrer.Vorname = Global.SafeGetString(sqlDataReader, 3);
+                                    lehrer.Mail = Global.SafeGetString(sqlDataReader, 4);
+                                    lehrer.Raum = (from r in raums where r.IdUntis == sqlDataReader.GetInt32(5) select r.Raumnummer).FirstOrDefault();
+                                    lehrer.Titel = Global.SafeGetString(sqlDataReader, 6);
+                                    lehrer.Deputat = Convert.ToDouble(sqlDataReader.GetInt32(7)) / 1000;
+                                    lehrer.Geschlecht = Global.SafeGetString(sqlDataReader, 8).Contains("W") ? "w" : "m";
+                                    
+                                    try
+                                    {
+                                        lehrer.Geburtsdatum = DateTime.ParseExact(sqlDataReader.GetInt32(9).ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        Console.WriteLine(lehrer.Kürzel + ": Kein Geburtsdatum");
+                                    }
+
+                                    if (lehrer.Geburtsdatum.Year > 1)
+                                    {
+                                        lehrer.AlterAmErstenSchultagDiesesJahres = lehrer.GetAlterAmErstenSchultagDiesesJahres(aktSj);
+                                        lehrer.ProzentStelle = lehrer.GetProzentStelle();
+                                        lehrer.AusgeschütteteAltersermäßigung = (from a in lehrer.Anrechnungen where a.Grund == 200 select a.Wert).FirstOrDefault();
+                                        lehrer.CheckAltersermäßigung();
+                                    }
+
+                                    this.Add(lehrer);
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -147,6 +162,15 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
             string anrechnungstring = "";
 
+            File.WriteAllText(dateiAnrechnungen, "==== Verteilung des Lehrertopfs ====" + Environment.NewLine);
+            File.AppendAllText(dateiAnrechnungen, Environment.NewLine);
+
+            File.WriteAllText(dateiAnrechnungen, "Die Tabelle gibt Auskunft über die Anrechnungen. Die ausgewiesenen Stunden beziehen sich auf ein ganzes Schuljahr. Eine Befristung reduziert den Jahreswert entsprechend. Die zur Verfügung stehende Gesamtzahl der Anrechnungsstunden wird unter [[sl:personalia|Personalia]] erfasst." + Environment.NewLine);
+            File.AppendAllText(dateiAnrechnungen, Environment.NewLine);
+
+            File.WriteAllText(dateiAnrechnungen, "Verarbeitungshinweise((Bevor teams.exe ausgeführt wird, um die folgende Tabelle zu generieren, muss für jede interessierende Anrechnung in Untis eine Beschreibung ausgewählt worden sein.Ohne Beschreibung kein Übertrag in diese Liste!)) " + Environment.NewLine);
+            File.AppendAllText(dateiAnrechnungen, Environment.NewLine);
+                        
             File.WriteAllText(dateiAnrechnungen, "  Stand: " + DateTime.Now.ToShortDateString() + ", " + DateTime.Now.ToShortTimeString() + " Uhr" + Environment.NewLine);
             File.AppendAllText(dateiAnrechnungen, Environment.NewLine);
             File.AppendAllText(dateiAnrechnungen, "^Name^Grund^Wert^Von^Bis^" + Environment.NewLine);
@@ -154,7 +178,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
             foreach (var lehrer in this.OrderBy(x => x.Nachname))
             {
-                if (lehrer.Nachname == "Moritz")
+                if (lehrer.Nachname == "Weitkemper")
                 {
                     string a = "";
                 }
@@ -185,7 +209,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
             Global.WriteLine("DateiAnrechnungen.txt erzeugt", "ok");
         }
 
-        internal void DateiKollegiumErzeugen(Unterrichts unterrichts, Klasses klasses)
+        internal void DateiKollegiumErzeugen(Unterrichts unterrichts, Klasses klasses, Fachschaften fachschaften)
         {
             string dateiKollegium = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\\Kollegium.txt";
 
@@ -216,7 +240,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
                 // Auf Fächer prüfen
 
-                var fachss = new List<string>();
+                var fachs = new List<string>();
 
                 if ((from u in unterrichts where u.LehrerKürzel == lehrer.Kürzel select u).Any())
                 {
@@ -226,10 +250,20 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                     {
                         if (lehrer.Kürzel == unterricht.LehrerKürzel)
                         {
-                            if (!fachss.Contains(unterricht.FachKürzel + "|" + lehrer.Kürzel))
+                            if (!fachs.Contains(unterricht.FachKürzel.Split(' ')[0] + "|" + lehrer.Kürzel))
                             {
-                                fachss.Add(unterricht.FachKürzel + "|" + lehrer.Kürzel);
-                                faecher += unterricht.FachKürzel + ", ";
+                                fachs.Add(unterricht.FachKürzel.Split(' ')[0] + "|" + lehrer.Kürzel);
+
+                                var x = (from f in fachschaften where f.KürzelUntis == unterricht.FachKürzel.Split(' ')[0] select f).FirstOrDefault();
+
+                                if (x != null)
+                                {
+                                    faecher += "[[:" + x.Beschr +"|" + unterricht.FachKürzel.Split(' ')[0] + "]], ";
+                                }
+                                else
+                                {
+                                    faecher += unterricht.FachKürzel.Split(' ')[0] + ", ";
+                                }
                             }
                         }
                     }
@@ -312,9 +346,13 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
                 if (lehrer.Anrechnungen.Count > 0)
                 {
-                    aufgaben += @"**Funktion / Aufgabenbereich:** ";
+                    aufgaben += @"**Aufgabenbereich:** ";
 
-                    foreach (var anrechnung in (from l in lehrer.Anrechnungen where l.Beschr != "Interessen" select l).OrderBy(x => x.Text))
+                    foreach (var anrechnung in (from l in lehrer.Anrechnungen 
+                                                where l.Beschr != "Interessen" 
+                                                where l.Grund != 200 // Altersermäßigung
+                                                where l.Grund != 210 // Schwerbehinderung
+                                                select l).OrderBy(x => x.Text))
                     {
                         string wert = "";
 
@@ -365,10 +403,9 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
 
                     interessen = interessen.TrimEnd();
                     interessen = interessen.TrimEnd(',');
-
                 }
 
-                File.AppendAllText(dateiKollegium, "|<BOOKMARK:" + lehrer.Kürzel + ">{{:lul:lul-fotos:" + lehrer.Kürzel + ".jpg?nolink&100|}}| **" + (lehrer.Titel != "" ? lehrer.Titel + " " : "") + lehrer.Nachname + ", " + lehrer.Vorname + @"** (" + lehrer.Kürzel + @")\\ [[" + lehrer.Mail + @"]]\\ [[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + " | " + lehrer.Vorname + " " + lehrer.Nachname + @"]]|" + bildungsgaenge + faecher + klassenleitungen + aufgaben + interessen + "| " + Environment.NewLine);
+                File.AppendAllText(dateiKollegium, "|<BOOKMARK:" + lehrer.Kürzel + ">{{:lul:lul-fotos:" + lehrer.Kürzel + ".jpg?nolink&100|}}| **" + (lehrer.Titel != "" ? lehrer.Titel + " " : "") + lehrer.Nachname + ", " + lehrer.Vorname + @"** (" + lehrer.Kürzel + @")\\ [[" + lehrer.Mail + @"]]\\ [[chat>" + lehrer.Mail.Replace("@berufskolleg-borken.de", "") + " | " + lehrer.Vorname + " " + lehrer.Nachname + @"]]| " + (lehrer.Deputat == 0 ? "" : "**Deputat:** " + lehrer.Deputat + @" Stunden\\ ") + bildungsgaenge + faecher + klassenleitungen + aufgaben + interessen + "| " + Environment.NewLine);
             }
                         
             File.AppendAllText(dateiKollegium, "" + Environment.NewLine);

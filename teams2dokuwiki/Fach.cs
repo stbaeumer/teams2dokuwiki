@@ -7,5 +7,6 @@
         public string LangnameUntis { get; internal set; }
         public string BezeichnungImZeugnis { get; internal set; }
         public string Fachklassen { get; internal set; }
+        public string Beschr { get; internal set; }
     }
 }

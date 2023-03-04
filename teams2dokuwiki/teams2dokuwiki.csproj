@@ -52,6 +52,8 @@
     <Compile Include="CVReasons.cs" />
     <Compile Include="Fach.cs" />
     <Compile Include="Fachs.cs" />
+    <Compile Include="Fachschaft.cs" />
+    <Compile Include="Fachschaften.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Interruption.cs" />
     <Compile Include="Klasse.cs" />

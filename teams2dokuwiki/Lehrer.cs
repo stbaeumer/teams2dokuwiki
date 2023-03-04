@@ -19,6 +19,7 @@ namespace teams2dokuwiki
         public double AusgeschütteteAltersermäßigung { get; internal set; }
         public int ProzentStelle { get; internal set; }
         public int AlterAmErstenSchultagDiesesJahres { get; internal set; }
+        public string Flags { get; internal set; }
 
         internal string GetAnrechnungAusTextGekürzt(string name)
         {

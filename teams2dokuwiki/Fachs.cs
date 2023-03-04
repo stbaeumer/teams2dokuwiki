@@ -32,11 +32,13 @@ WHERE Subjects.Schoolyear_id = " + Global.AktSj[0] + Global.AktSj[1] + " AND Sub
                         Fach fach = new Fach()
                         {
                             IdUntis = sqlDataReader.GetInt32(0),
-                            KürzelUntis = Global.SafeGetString(sqlDataReader, 1)
+                            KürzelUntis = Global.SafeGetString(sqlDataReader, 1),
+                            Beschr = Global.SafeGetString(sqlDataReader, 4)
                         };
 
                         this.Add(fach);
                     };
+
 
                     sqlDataReader.Close();
                 }
