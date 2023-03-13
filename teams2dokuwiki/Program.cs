@@ -52,8 +52,8 @@ namespace teams2dokuwiki
                 //Global.TeamsSoll.Hinzufügen(new Team("Bildungsgangleitungen", lehrers, members));
                 //Global.TeamsSoll.Hinzufügen(new Team("KlassenleitungenBlaueBriefe", lehrers, klasses.KlassenleitungenBlaueBriefe(aktJahr)));
 
-                lehrers.DateiKollegiumErzeugen(unterrichts, klasses, fachschaften);
-                //Global.TeamsSoll.DateiGruppenUndMitgliederErzeugen();
+                Global.TeamsSoll.DateiGruppenUndMitgliederErzeugen();
+                lehrers.DateiKollegiumErzeugen(unterrichts, klasses, fachschaften);                
                 Global.TeamsSoll.DateiPraktiumErzeugen();
                 lehrers.DateiAnrechnungenErzeugen(klasses);
                 Console.ReadKey();

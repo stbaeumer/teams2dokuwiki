@@ -348,19 +348,45 @@ teamSoll.DisplayName.StartsWith("HB")))
 
         internal void Hinzufügen(Anrechnungs anrechnungen, Lehrers lehrers, Teams klassenMitAllenSoll)
         {
-            foreach (var anrechnung in (from a in anrechnungen where a.Beschr != null where a.Beschr != "" where new List<string>() { "Verteilergruppe", "Team" }.Contains(a.Beschr) select a).ToList())
+            foreach (var anrechnung in anrechnungen)
             {
-                Team team = new Team(anrechnung.TextGekürzt);
-                team.Typ = anrechnung.Beschr;
+                Team team = new Team();
 
+                // Für jede Anrechnung, deren Beschreibung mehrfach vorkommt, wird eine Gruppe gebildet 
+
+                if ((from a in anrechnungen where a.Beschr == anrechnung.Beschr select a).Count() > 1)
+                {
+                    // Wenn noch kein Team mit diesem Namen existiert, wird es erzeugt
+
+                    var name = (from a in anrechnungen where a.Beschr == anrechnung.Beschr select a.Beschr.Split(':').Last()).FirstOrDefault();
+
+                    if (!(from g in Global.TeamsSoll where g.DisplayName == name select g).Any())
+                    {
+                        team = new Team(name);
+                    }
+                    else
+                    {
+                        team = (from g in Global.TeamsSoll where g.DisplayName == name select g).FirstOrDefault();
+                    }
+
+                    //team.Members.Add(new Lehrer(anrechnung));
+                    
+                    // Wenn ein gleichnamiges Team schon existiert, wird einfach nur der Member hinzugefüt.
+
+
+
+                    // Name des Teams ab dem letzten Doppelpunkt:
+
+                    team.DisplayName = 
+                                       
+                    team.Typ = anrechnung.Beschr;
+                }
+
+                
                 foreach (var aa in (from ax in anrechnungen where ax.TextGekürzt == anrechnung.TextGekürzt select ax).ToList())
                 {
                     var leMail = (from l in lehrers where l.IdUntis == aa.TeacherIdUntis select l).FirstOrDefault();
 
-                    if (leMail == null)
-                    {
-                        string a = "";
-                    }
 
                     if (!(from t in team.Members where t != null where t.Mail == leMail.Mail select t).Any())
                     {
@@ -425,7 +451,13 @@ teamSoll.DisplayName.StartsWith("HB")))
             File.AppendAllText(dateiGruppenUndMitglieder, "  Stand: " + DateTime.Now.ToShortDateString() + ", " + DateTime.Now.ToShortTimeString() + " Uhr; Bitte diese Seite nicht manuell ändern." + Environment.NewLine);
             File.AppendAllText(dateiGruppenUndMitglieder, "Siehe auch [[:kollegium|Kollegium]]." + Environment.NewLine);
 
-            foreach (var teamSoll in (from t in Global.TeamsSoll where t.Beschreibung == null select t).ToList().OrderBy(s => s.DisplayName))
+
+            foreach (var item in (from t in Global.TeamsSoll.OrderBy(xx => xx.Typ) where t.Typ != null select t).ToList())
+            {
+                string a = "";
+            }
+
+            foreach (var teamSoll in (from t in Global.TeamsSoll where t.Beschreibung != null select t).ToList().OrderBy(s => s.DisplayName))
             {
                 string mitgliederMail = "";
                 string mitgliederNachname = "";

@@ -73,13 +73,15 @@ namespace teams2dokuwiki
 
         internal void CheckAltersermäßigung()
         {
+            // dieses SJ
+
             if (AlterAmErstenSchultagDiesesJahres >= 60)
             {
-                if (ProzentStelle == 100 && AusgeschütteteAltersermäßigung != 3)
+                if (ProzentStelle >= 96 && AusgeschütteteAltersermäßigung != 3)
                 {
                     Console.WriteLine(Kürzel + " war zu Beginn des SJ " + AlterAmErstenSchultagDiesesJahres + " alt und müsste mit einer " + ProzentStelle + "%-Stelle 3 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
                 }
-                if (ProzentStelle >= 75 && ProzentStelle < 100 && AusgeschütteteAltersermäßigung != 2)
+                if (ProzentStelle >= 75 && ProzentStelle < 96 && AusgeschütteteAltersermäßigung != 2)
                 {
                     Console.WriteLine(Kürzel + " war zu Beginn des SJ " + AlterAmErstenSchultagDiesesJahres + " alt und müsste mit einer " + ProzentStelle + "%-Stelle 2 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
                 }
@@ -98,6 +100,36 @@ namespace teams2dokuwiki
                 if (ProzentStelle >= 50 && ProzentStelle < 100 && AusgeschütteteAltersermäßigung != 0.5)
                 {
                     Console.WriteLine(Kürzel + " war zu Beginn des SJ " + AlterAmErstenSchultagDiesesJahres + " alt und müsste mit einer " + ProzentStelle + "%-Stelle 0,5 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
+                }
+            }
+
+            // kommendes SJ
+
+            if (AlterAmErstenSchultagDiesesJahres + 1 >= 60)
+            {
+                if (ProzentStelle >= 96 && AusgeschütteteAltersermäßigung != 3)
+                {
+                    Console.WriteLine(Kürzel + " wird zu Beginn des kommenden SJ " + (AlterAmErstenSchultagDiesesJahres + 1) + " alt sein und muss mit einer " + ProzentStelle + "%-Stelle 3 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
+                }
+                if (ProzentStelle >= 75 && ProzentStelle < 96 && AusgeschütteteAltersermäßigung != 2)
+                {
+                    Console.WriteLine(Kürzel + " wird zu Beginn des kommenden SJ " + (AlterAmErstenSchultagDiesesJahres + 1) + " alt und muss mit einer " + ProzentStelle + "%-Stelle 2 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
+                }
+                if (ProzentStelle >= 50 && ProzentStelle < 75 && AusgeschütteteAltersermäßigung != 1.5)
+                {
+                    Console.WriteLine(Kürzel + " wird zu Beginn des kommenden SJ " + (AlterAmErstenSchultagDiesesJahres + 1) + " alt und muss mit einer " + ProzentStelle + "%-Stelle 1.5 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
+                }
+            }
+
+            if (AlterAmErstenSchultagDiesesJahres + 1 >= 55 && AlterAmErstenSchultagDiesesJahres < 60)
+            {
+                if (ProzentStelle == 100 && AusgeschütteteAltersermäßigung != 1)
+                {
+                    Console.WriteLine(Kürzel + " wird zu Beginn des kommenden SJ " + (AlterAmErstenSchultagDiesesJahres + 1) + " alt und muss mit einer " + ProzentStelle + "%-Stelle 1 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
+                }
+                if (ProzentStelle >= 50 && ProzentStelle < 100 && AusgeschütteteAltersermäßigung != 0.5)
+                {
+                    Console.WriteLine(Kürzel + " wird zu Beginn des kommenden SJ " + (AlterAmErstenSchultagDiesesJahres + 1) + " alt und muss mit einer " + ProzentStelle + "%-Stelle 0,5 Std Ermäßigung bekommen statt wie bisher : " + AusgeschütteteAltersermäßigung + " Std.");
                 }
             }
         }

@@ -351,6 +351,7 @@ WHERE (((SCHOOLYEAR_ID)= " + Global.AktSj[0] + Global.AktSj[1] + ") AND  ((TERM_
                     foreach (var anrechnung in (from l in lehrer.Anrechnungen 
                                                 where l.Beschr != "Interessen" 
                                                 where l.Grund != 200 // Altersermäßigung
+                                                where l.Grund != 885 // Rundungsgewinne
                                                 where l.Grund != 210 // Schwerbehinderung
                                                 select l).OrderBy(x => x.Text))
                     {
